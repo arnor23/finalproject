@@ -1,0 +1,14 @@
+body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin:0; background:#f4f4f9; color:#333; }
+header { background:#6c63ff; color:#fff; padding:1rem; text-align:center; }
+.note-form { max-width:640px; margin:1.5rem auto; display:flex; flex-direction:column; gap:.5rem; padding:0 1rem; }
+.note-form input, .note-form textarea { padding:.6rem; font-size:1rem; border:1px solid #ccc; border-radius:6px; }
+.note-form button { background:#6c63ff; color:#fff; padding:.7rem; border:none; border-radius:6px; cursor:pointer; }
+.notes-container { max-width:1000px; margin:1.5rem auto; display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:1rem; padding:0 1rem; }
+.note-card { background:#fff; border-radius:8px; padding:1rem; box-shadow:0 3px 6px rgba(0,0,0,0.08); display:flex; flex-direction:column; justify-content:space-between; }
+.note-card h3 { margin:0 0 .5rem 0; }
+.note-card p { margin:0 0 1rem 0; color:#555; }
+.note-card .buttons { display:flex; justify-content:flex-end; gap:.5rem; }
+.note-card button { padding:.3rem .6rem; border:none; border-radius:6px; cursor:pointer; font-size:.85rem; }
+.note-card button.edit { background:#ffb400; color:#fff; }
+.note-card button.delete { background:#ff4d4d; color:#fff; }
+.no-notes, .error { text-align:center; color:#888; font-style:italic; }

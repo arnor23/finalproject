@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NoteArnor</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    button {
+      padding: 10px 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    #addBtn { background: #4CAF50; color: white; }
+    .editBtn { background: #2196F3; color: white; }
+    .deleteBtn { background: #f44336; color: white; }
+
+    .note {
+      background: #fff;
+      padding: 15px;
+      margin-top: 10px;
+      border-radius: 8px;
+      border-left: 4px solid #2196F3;
+    }
+
+    .note-title {
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    .note-buttons {
+      margin-top: 10px;
+    }
+
+    .note-buttons button {
+      margin-right: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>NoteArnor</h1>
+
+  <div class="container">
+    <h3>Add Note</h3>
+    <input id="title" type="text" placeholder="Title..." />
+    <textarea id="description" rows="3" placeholder="Description..."></textarea>
+    <button id="addBtn">Add Note</button>
+
+    <h3 style="margin-top:30px;">All Notes</h3>
+    <div id="notes"></div>
+  </div>
+
+  <script>
+    const API_URL = "https://notearnor-backend-997782379919.us-central1.run.app";
+
+    // Load notes at start
+    loadNotes();
+
+    document.getElementById("addBtn").onclick = async () => {
+      const title = document.getElementById("title").value;
+      const description = document.getElementById("description").value;
+
+      await fetch(`${API_URL}/notes`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title, description })
+      });
+
+      loadNotes();
+    };
+
+    async function loadNotes() {
+      const res = await fetch(`${API_URL}/notes`);
+      const data = await res.json();
+
+      const container = document.getElementById("notes");
+      container.innerHTML = "";
+
+      data.forEach(note => {
+        const div = document.createElement("div");
+        div.className = "note";
+
+        div.innerHTML = `
+          <div class="note-title">${note.title}</div>
+          <div>${note.description}</div>
+          <div class="note-buttons">
+            <button class="editBtn" onclick="editNote(${note.id}, '${note.title}', '${note.description}')">Edit</button>
+            <button class="deleteBtn" onclick="deleteNote(${note.id})">Delete</button>
+          </div>
+        `;
+
+        container.appendChild(div);
+      });
+    }
+
+    async function deleteNote(id) {
+      await fetch(`${API_URL}/notes/${id}`, { method: "DELETE" });
+      loadNotes();
+    }
+
+    async function editNote(id, oldTitle, oldDesc) {
+      const newTitle = prompt("New title:", oldTitle);
+      const newDesc = prompt("New description:", oldDesc);
+
+      if (!newTitle || !newDesc) return;
+
+      await fetch(`${API_URL}/notes/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title: newTitle, description: newDesc })
+      });
+
+      loadNotes();
+    }
+  </script>
+
+</body>
+</html>
